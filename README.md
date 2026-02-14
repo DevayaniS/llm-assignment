@@ -7,3 +7,4 @@ This repository contains the notebook `LLM-Assignment.ipynb`, intended to be run
 2. Install dependencies:
    ```bash
    pip install -r requirements.txt
+Code : https://colab.research.google.com/drive/1I4pOnKoZJK5Hrn20vWas484X8Gc1suXW?usp=drive_link
