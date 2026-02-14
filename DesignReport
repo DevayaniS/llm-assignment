@@ -1,0 +1,39 @@
+# Design report (1 page)  
+
+ Chunking  
+Goal: Divide source documents into retrievable pieces that fit within context window limits while maintaining their meaning.  
+
+Strategy:  
+- Use structure-aware chunking (by heading, section, or paragraph) when the document has a clear format.  
+- If the structure is unclear, use fixed-size chunks (based on tokens or characters) with some overlap.  
+
+Recommended defaults (for RAG-style notebooks):  
+- Chunk size: approximately 600–1,000 tokens  
+- Overlap: roughly 100–200 tokens (10–20%)  
+- Include metadata with each chunk: document name, page number, section title, chunk ID.  
+
+Reasoning: Overlapping chunks help prevent “boundary loss,” where important definitions or constraints are split between chunks, enhancing retrieval accuracy and completeness of answers.  
+
+ LLM choice (OpenAI)  
+Constraints: Must run on Google Colab, use OpenAI SDK, allow fast iteration, and reliably follow instructions.  
+
+Choice rationale:  
+- Select an OpenAI instruction-following/chat model suitable for grounded Q&A using retrieved context.  
+- Maintain conservative generation for factual responses: low temperature (0–0.3) and limited output length.  
+- Prefer models that can produce stable, structured outputs when necessary (e.g., bullet points, JSON-like formatting).  
+
+ Out-of-scope handling  
+Problem: Users might ask questions not covered by the ingested documents or retrieved chunks.  
+
+Detection signals:  
+- Retrieval yields low-relevance or no chunks.  
+- The context lacks the requested entity, metric, or supporting evidence.  
+
+Policy:  
+- Avoid guessing. Reply with: “Not found in provided context.”  
+- Suggest next steps: request the missing document or section, or ask the user to narrow their question.  
+- If partially supported, answer only the supported portion and clearly indicate limitations.  
+
+Template:  
+> I don’t have enough information in the provided documents to answer this.  
+> If you share the relevant section or add the source file, I can re-run retrieval and respond.
